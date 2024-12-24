@@ -1,13 +1,21 @@
 package com.example.nobsv2.product;
 
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.nobsv2.product.model.Product;
+import com.example.nobsv2.product.services.CreateProductService;
+import com.example.nobsv2.product.services.DeleteProductService;
+import com.example.nobsv2.product.services.GetProductsService;
+import com.example.nobsv2.product.services.UpdateProductService;
 
 @RestController
 public class ProductController {
 
-    private final GetProductService getProductService;
+    private final GetProductsService getProductsService;
 
     private final CreateProductService createProductService;
     
@@ -16,20 +24,20 @@ public class ProductController {
     private final DeleteProductService deleteProductService;
 
     public ProductController(
-        GetProductService getProductService, 
+        GetProductsService getProductsService, 
         CreateProductService createProductService,
         UpdateProductService updateProductService, 
         DeleteProductService deleteProductService
     ) {
-        this.getProductService = getProductService;
+        this.getProductsService = getProductsService;
         this.createProductService = createProductService;
         this.updateProductService = updateProductService;
         this.deleteProductService = deleteProductService;
     }
 
     @GetMapping
-    public ResponseEntity<String> getProduct() {
-        return getProductService.execute(null);
+    public ResponseEntity<List<Product>> getProducts() {
+        return getProductsService.execute(null);
     }
 
     @PostMapping
