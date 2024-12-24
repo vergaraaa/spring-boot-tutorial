@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.nobsv2.Command;
+import com.example.nobsv2.exceptions.ProductNotFoundException;
 import com.example.nobsv2.product.ProductRepository;
 import com.example.nobsv2.product.model.Product;
 import com.example.nobsv2.product.model.ProductDTO;
@@ -31,6 +32,6 @@ public class UpdateProductService implements Command<UpdateProductCommand, Produ
             return ResponseEntity.ok(new ProductDTO(product));
         }
 
-        return null;
+        throw new ProductNotFoundException();
     }
 }
