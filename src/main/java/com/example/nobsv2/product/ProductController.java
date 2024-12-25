@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.nobsv2.exceptions.SearchProductService;
 import com.example.nobsv2.product.model.Product;
 import com.example.nobsv2.product.model.ProductDTO;
 import com.example.nobsv2.product.model.UpdateProductCommand;
@@ -14,6 +15,9 @@ import com.example.nobsv2.product.services.DeleteProductService;
 import com.example.nobsv2.product.services.GetProductService;
 import com.example.nobsv2.product.services.GetProductsService;
 import com.example.nobsv2.product.services.UpdateProductService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 public class ProductController {
@@ -21,6 +25,8 @@ public class ProductController {
     private final GetProductsService getProductsService;
 
     private final GetProductService getProductService;
+
+    private final SearchProductService searchProductService;
 
     private final CreateProductService createProductService;
     
@@ -31,12 +37,14 @@ public class ProductController {
     public ProductController(
         GetProductsService getProductsService, 
         GetProductService getProductService, 
+        SearchProductService searchProductService,
         CreateProductService createProductService,
         UpdateProductService updateProductService, 
         DeleteProductService deleteProductService
     ) {
         this.getProductsService = getProductsService;
         this.getProductService = getProductService;
+        this.searchProductService = searchProductService;
         this.createProductService = createProductService;
         this.updateProductService = updateProductService;
         this.deleteProductService = deleteProductService;
@@ -50,6 +58,11 @@ public class ProductController {
     @GetMapping("/product/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Integer id) {
         return getProductService.execute(id);
+    }
+
+    @GetMapping("/product/search")
+    public ResponseEntity<List<ProductDTO>> searchProductByName(@RequestParam String name) {
+        return searchProductService.execute(name);
     }
 
     @PostMapping("/product")
