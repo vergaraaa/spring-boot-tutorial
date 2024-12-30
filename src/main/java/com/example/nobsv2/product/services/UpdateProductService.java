@@ -2,6 +2,7 @@ package com.example.nobsv2.product.services;
 
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,10 @@ public class UpdateProductService implements Command<UpdateProductCommand, Produ
     }
     
     @Override
+    // @CacheEvict(value = "productCache", key = "#command.getId()") // key must match with line 28
+    // evict throws away the value of the cache 
+    // put throws it away and then puts the return value of the method in the cache
+    @CachePut(value = "productCache", key = "#command.getId()") // key must match with line 28
     public ResponseEntity<ProductDTO> execute(UpdateProductCommand command) {
         Optional<Product> productOptional = productRepository.findById(command.getId());
 
