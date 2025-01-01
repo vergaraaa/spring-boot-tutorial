@@ -33,4 +33,11 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleProductNotValidConstraints(ConstraintViolationException exception) {
         return new ErrorResponse(exception.getConstraintViolations().iterator().next().getMessage());
     }
+
+    @ExceptionHandler(CatFactsApiDownException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ResponseBody
+    public ErrorResponse handleProductNotValidConstraints(CatFactsApiDownException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
 }
