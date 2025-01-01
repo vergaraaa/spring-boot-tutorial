@@ -3,6 +3,7 @@ package com.example.nobsv2.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,7 +11,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.example.nobsv2.security.jwt.JwtAuthenticationFilter;
 
 
 @Configuration
@@ -33,6 +36,7 @@ public class SecurityConfiguration {
         return httpSecurity
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> {
+                authorize.requestMatchers("/login").permitAll();
                 // have to let user create new without authentication
                 authorize.requestMatchers("/createNewUser").permitAll();
                 
@@ -40,9 +44,14 @@ public class SecurityConfiguration {
                 authorize.anyRequest().authenticated();
             })
             .addFilterBefore(
-                new BasicAuthenticationFilter(authenticationManager(httpSecurity)),
-                BasicAuthenticationFilter.class
+                jwtAuthenticationFilter(),
+                UsernamePasswordAuthenticationFilter.class
             )
             .build();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
     }
 }
