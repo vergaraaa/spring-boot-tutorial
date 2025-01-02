@@ -36,12 +36,13 @@ public class SecurityConfiguration {
         return httpSecurity
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> {
-                authorize.requestMatchers("/login").permitAll();
-                // have to let user create new without authentication
-                authorize.requestMatchers("/createNewUser").permitAll();
+                authorize.anyRequest().permitAll();
+                // authorize.requestMatchers("/login").permitAll();
+                // // have to let user create new without authentication
+                // authorize.requestMatchers("/createNewUser").permitAll();
                 
-                // must be at the bottom
-                authorize.anyRequest().authenticated();
+                // // must be at the bottom
+                // authorize.anyRequest().authenticated();
             })
             .addFilterBefore(
                 jwtAuthenticationFilter(),
